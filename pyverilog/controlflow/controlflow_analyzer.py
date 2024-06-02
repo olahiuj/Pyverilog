@@ -23,6 +23,7 @@ from pyverilog.dataflow.dataflow import *
 import pyverilog.controlflow.splitter as splitter
 import pyverilog.controlflow.transition as transition
 
+import time
 
 class VerilogControlflowAnalyzer(VerilogSubset):
     def __init__(self, topmodule, terms, binddict,
@@ -47,6 +48,8 @@ class VerilogControlflowAnalyzer(VerilogSubset):
         return loops, fsms
 
     def getFiniteStateMachines(self):
+        start_time = time.time_ns()
+
         statemachines = {}
         for termname, bindlist in self.resolved_binddict.items():
             if not self.isFsmVar(termname):
@@ -59,6 +62,8 @@ class VerilogControlflowAnalyzer(VerilogSubset):
                 fsm.set_delaycnt(delaycnt)
                 fsm.resolve(self.optimizer)
                 statemachines[termname] = fsm
+        end_time = time.time_ns()
+        print((end_time - start_time) / 1000.0)
         return statemachines
 
     def getFiniteStateMachine(self, termname, funcdict):
