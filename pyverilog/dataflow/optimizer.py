@@ -990,6 +990,7 @@ class VerilogDataflowOptimizer(VerilogOptimizer):
         return self.terms[name]
 
     def resolveConstant(self):
+        start_time = time.time_ns()
         # 2-pass
         for bk, bv in sorted(self.binddict.items(), key=lambda x: len(x[0])):
             termtype = self.getTerm(bk).termtype
@@ -1030,3 +1031,5 @@ class VerilogDataflowOptimizer(VerilogOptimizer):
                     r = self.optimizeConstant(r)
                     dims.append((l, r))
                 self.resolved_terms[tk].dims = tuple(dims)
+        end_time = time.time_ns()
+        print((end_time - start_time) / 1000.0)
