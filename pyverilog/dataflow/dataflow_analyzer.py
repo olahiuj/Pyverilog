@@ -15,8 +15,7 @@ from pyverilog.vparser.parser import VerilogCodeParser
 from pyverilog.dataflow.modulevisitor import ModuleVisitor
 from pyverilog.dataflow.signalvisitor import SignalVisitor
 from pyverilog.dataflow.bindvisitor import BindVisitor
-
-import time
+from pyverilog.utils.Timer import Timer
 
 # Increasing the maximum recursion size for deeper traversal
 sys.setrecursionlimit(16 * 1024)
@@ -40,8 +39,7 @@ class VerilogDataflowAnalyzer(VerilogCodeParser):
 
     def generate(self):
         ast = self.parse()
-
-        start_time = time.time_ns()
+        timer = Timer()
 
         module_visitor = ModuleVisitor()
         module_visitor.visit(ast)
@@ -66,8 +64,7 @@ class VerilogDataflowAnalyzer(VerilogCodeParser):
         self.terms = dataflow.getTerms()
         self.binddict = dataflow.getBinddict()
 
-        end_time = time.time_ns()
-        print((end_time - start_time) / 1000.0)
+        timer.tick()
 
     def getFrameTable(self):
         return self.frametable
